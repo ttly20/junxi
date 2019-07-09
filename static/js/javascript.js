@@ -24,7 +24,7 @@ new Vue({
             if (directory.innerText != "" && title.innerText !="") {
                 this.model.directory = directory.innerText
                 this.model.title = title.innerText
-                const noteget = await axios.get("/note/" + encodeURI(this.model.title))
+                const noteget = await axios.get("/note/" + this.model.title)
                 console.log(noteget)
                 if (noteget.data == "" ) {
                     const res = await axios.post("/note", this.model)

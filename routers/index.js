@@ -95,12 +95,19 @@ module.exports = app => {
     })
 
     // note descrption
-    router.get("/note/:title", async (req, res) => {
+    router.get("/:title", async (req, res) => {
         const note = await Note.findOne({ title: req.params.title })
                     .populate("directory").populate("tags").exec()
+        note.content = marked(note.content)
         const lists = await Directory.find().populate("notes").exec()
-        const tags = await Tag.find().populate("notes").exec(
+        const tags = await Tag.find().populate("notes").exec()
         res.render("content", { title: req.params.title, note, lists, tags })
+    })
+
+    // note query
+    router.get("/note/:title", async (req, res) => {
+        const note = await Note.findOne({ title: req.params.title }).exec()
+        res.send(note)
     })
 
     // note update

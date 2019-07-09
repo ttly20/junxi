@@ -21,7 +21,7 @@ Sider(breakpoint="md" scoped collapsible :collapsed-width="0"
                 div(slot="title") #{ list.directory }
                 each note in list.notes
                     menu-item
-                        a(href= "/note/" + note.title)
+                        a(href= "/" + note.title)
                             div(class="siderTitle") #{ note.title }
                             //- i-button(type="text" :size="buttonSize") 删除
     div(slot="trigger")
