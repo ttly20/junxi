@@ -1,6 +1,6 @@
 apps:
       - script             : ./index.js                                               # 入口文件
-        name               : 'ttly20'                                                 # 程序名称
+        name               : 'junxi'                                                  # 程序名称
         env                :                                                          # 环境变量
             COMMON_VARIABLE: true
         env_production     :
