@@ -51,8 +51,8 @@ module.exports = app => {
             .populate("directory").exec()
         for (index in notes) {
             if (notes[index].content != undefined) {
-                const cont = marked(notes[index].content)
-                notes[index].content = cont.substring(0, 255) + "..."
+                notes[index].content = marked(notes[index]
+                    .content.substring(0, 100))
             }
         }
         const lists = await Directory.find().populate("notes").exec()

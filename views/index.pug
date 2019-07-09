@@ -1,13 +1,15 @@
 extends layout
 block content
-    div
+    div(class="myleft")
         Breadcrumb(separator=">")
-            breadcrumb-item(to="/") Home
+            breadcrumb-item(to="/") 首页
         each note in notes
-            Card
-                div(slot="title" class="contentitle") #{ note.title }
-                    div #{ note.author }
-                p(onload="realtime")
-                    != note.content
-                each tag in note.tags
-                    Tag #{ tag.tag }
+            Card(class="mycont")
+                div(slot="title" class="contensingle")
+                    a(href="/" + note.title) #{ note.title }
+                    div 作者: #{ note.author }
+                != note.content
+                div(id="tagsview" class="contensingle") 标签:
+                    each tag in note.tags
+                        Tag #{ tag.tag }
+                    div 发布日期: #{ note.date }

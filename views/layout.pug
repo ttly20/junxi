@@ -1,24 +1,26 @@
 doctype html
 head
-    title #{ title }  - 君兮
-    meta(charset="utf-8")
-    link(rel="stylesheet"
+     title #{ title }  - 君兮
+     meta(charset="utf-8")
+     link(rel="stylesheet"
          href="/css/iview.css")
-    link(rel="stylesheet"
+     link(rel="stylesheet"
+          href="/css/reset.css")
+     link(rel="stylesheet"
          href="/css/css.css")
-    script(src="/js/vue.js")
-    script(src="/js/iview.js")
-    script(src="/js/marked.js")
-    script(src="/js/axios.js")
-    //- script(src="/js/vue-router.js")
-    meta(name="viewport"
-         content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
-    block script
+     script(src="/js/vue.js")
+     script(src="/js/iview.js")
+     script(src="/js/marked.js")
+     script(src="/js/axios.js")
+     //- script(src="/js/vue-router.js")
+     meta(name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
+     block script
 body
-    div(id="app" class="layout")
+     div(id="app" class="layout")
           Layout
                include sider
                Layout
                    block content
                    include footer
-    script(src="/js/javascript.js")
+     script(src="/js/javascript.js")
