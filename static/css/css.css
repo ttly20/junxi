@@ -4,6 +4,13 @@ img{
 body{
      background: #f8f8f9;
 }
+a,
+a:link,
+a:visited {
+    color: black;
+}a:hover {
+  color: #2d8cf0;
+}
 .layout{
     border: 1px solid #d7dde4;
     border-bottom: 0px;
