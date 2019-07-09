@@ -97,8 +97,3 @@ body{
 }.contentitle > div > span {
     padding-left: 5px;
 }
-.mycont {
-    min-height: 84vh;
-    width: 82vw;
-    padding: 10px;
-}

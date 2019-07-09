@@ -24,7 +24,7 @@ new Vue({
             if (directory.innerText != "" && title.innerText !="") {
                 this.model.directory = directory.innerText
                 this.model.title = title.innerText
-                const noteget = await axios.get("/" + this.model._id)
+                const noteget = await axios.get("/note/" + this.model.title)
                 console.log(noteget)
                 if (noteget.data == "" ) {
                     const res = await axios.post("/note", this.model)
@@ -61,12 +61,6 @@ new Vue({
             const i = this.model.tags.indexOf(tag)
             this.model.tags.splice(i, 1)
             this.$Message.success("删除标签成功")
-        },
-        delnote (id) {
-            const res = axios.delete("/note", id)
-            this.$Message.success({
-                content: res.data,
-            })
         },
         regex (str) {
             const regx = /[\~\!\@\#\$\%\^\&\*\(\)\_\+\{\}\|\:\"\>\?\`\-\=\[\]\\;'\.\/～！·￥……（）——《》？、]/
