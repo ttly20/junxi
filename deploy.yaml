@@ -1,0 +1,11 @@
+apps:
+      - script: ./index.js                                                    # 入口文件
+        name: 'ttly20'                                                           # 程序名称
+        env:                                                                  # 环境变量
+            COMMON_VARIABLE: true
+        env_production:
+            NODE_ENV: production
+        log_date_format: 'YYYY-MM-DD HH:mm Z'                                 # 日志格式
+        err_file: "./logs/err.log"                                            # 错误日志输出文件
+        out_file: "./logs/out.log"                                            # 输出日志文件
+        pid_file: "./logs/app-pm_id.pid"                                      # pid文件
