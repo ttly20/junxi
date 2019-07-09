@@ -1,0 +1,99 @@
+img{
+    width: 100%
+}
+body{
+     background: #f8f8f9;
+}
+.layout{
+    border: 1px solid #d7dde4;
+    border-bottom: 0px;
+    background: #f5f7f9;
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.layout-logo{
+    width: 150px;
+    height: 50px;
+    border-radius: 3px;
+    float: left;
+    position: relative;
+    top: 15px;
+    left: 20px;
+}
+.layout-nav{
+    width: 420px;
+    margin: 0 auto;
+    margin-right: 20px;
+}
+.menu-item span{
+    display: inline-block;
+    overflow: hidden;
+    width: 50px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+    transition: width .2s ease .2s;
+}
+.menu-item i{
+    transform: translateX(0px);
+    transition: font-size .2s ease, transform .2s ease;
+    vertical-align: middle;
+    font-size: 16px;
+}
+.collapsed-menu span{
+    width: 0px;
+    transition: width .2s ease;
+}
+.collapsed-menu i{
+    transform: translateX(5px);
+    transition: font-size .2s ease .2s, transform .2s ease .2s;
+    vertical-align: middle;
+    font-size: 22px;
+}
+.layout-footer-center{
+    text-align: center;
+}
+.myleft{
+    margin-left: 2vw;
+}
+.mycolor{
+    background: #fff;
+}
+.mysize-sider {
+    height: 99.5vh;
+    z-index: 1;
+}
+.siderTitle > button {
+    margin-left: 3vw;
+}
+.mysize-card {
+    height: 84vh;
+    overflow-y: auto;
+    margin: 5px;
+    padding: 5px;
+}
+.myedit {
+    width: 40vw;
+    min-width: 240px;
+    float: left;
+}
+.contentedit[contentEditable]:empty:not(:focus):before {
+  content: attr(placeholder);
+  color: #aaa;
+  font-weight: 300;
+  border: 1px;
+  border-style: dotted;
+}
+.tagstyle{
+    border: 1px;
+    border-style: dotted;
+    margin-right: 5px;
+}
+.contentitle {
+    display: inline;
+}.contentitle > div {
+    float:right;
+}.contentitle > div > span {
+    padding-left: 5px;
+}
