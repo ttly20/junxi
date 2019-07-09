@@ -1,0 +1,13 @@
+extends layout
+block content
+    div
+        Breadcrumb(separator=">")
+            breadcrumb-item(to="/") Home
+        each note in notes
+            Card
+                div(slot="title" class="contentitle") #{ note.title }
+                    div #{ note.author }
+                p(onload="realtime")
+                    != note.content
+                each tag in note.tags
+                    Tag #{ tag.tag }
