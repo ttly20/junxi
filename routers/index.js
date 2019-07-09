@@ -96,8 +96,18 @@ module.exports = app => {
 
     // note descrption
     router.get("/note/:title", async (req, res) => {
-        const note = await Note.findOne({ title: req.params.title }).exec()
+        const note = await Note.findOne({ title: req.params.title })
+                    .populate("directory").populate("tags").exec()
+        if (note != null) note.content = marked(note.content)
+        const lists = await Directory.find().populate("notes").exec()
+        const tags = await Tag.find().populate("notes").exec()
         res.render("content", { title: req.params.title, note, lists, tags })
+    })
+
+    // note have
+    router.get("/:id", async (req, res) => {
+        const note = await Note.findOne({ title: req.params.title }).exec()
+        res.send(note)
     })
 
     // note update
@@ -109,13 +119,13 @@ module.exports = app => {
             directory: await dir(req.body._id, req.body.directory),
             tags: await tags(req.body._id, req.body.tags),
         }, { upsert: true })
-        res.send("note update")
+        res.send("note update success")
     })
 
     // note delete
     router.delete("/note", async (req, res) => {
         await Note.deleteOne({ _id: req.body._id })
-        res.send("note delete")
+        res.send("note delete success")
     })
 
     app.use("/", router)

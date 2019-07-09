@@ -4,13 +4,18 @@ block content
         Breadcrumb(separator=">")
             breadcrumb-item(to="/") 首页
             Breadcrumb-Item
-                span(id="directory" contenteditable placeholder="点我输入目录" class="contentedit")
+                span(id="directory" placeholder="点我输入目录"
+                    class="contentedit") #{ note.directory.directory }
             breadcrumb-item
-                span(id="title" contenteditable placeholder="点我输入标题" class="contentedit")
-        div(id="tagsview")
-            Tag(v-for="tag in model.tags" closable @on-close="deltag(tag)") {{ tag }} 
-            span(id="addtag" contenteditable placeholder="添加标签"
-                 class="contentedit" @blur="addtag" @keyup.enter.188.229="addtag" class="tagstyle")
+                span(id="title" placeholder="点我输入标题" class="contentedit") #{ note.title }
         div(id="editarea")
-            Card(class="mysize-card myedit")
-                div(class="mysize-content" id="myedit" @keyup='conversion' @blur='autosave' contenteditable)
+            Card(class="mycont")
+                div(slot="title" class="contentitle") #{ note.title }
+                    div #{ note.author }
+                        Icon(type="md-close" @click="delnote(" + note._id + ")")
+                p(onload="realtime")
+                    != note.content
+                div(class="tagsview")
+                    each tag in note.tags
+                        Tag #{ tag.tag }
+                    div(class="del")

@@ -2,9 +2,10 @@ extends layout
 block content
     div
         Breadcrumb(separator=">")
-            breadcrumb-item(to="/") Home
+            breadcrumb-item(to="/") 首页
+        div(class="myarea")
         each note in notes
-            Card
+            Card(class="mycont")
                 div(slot="title" class="contentitle") #{ note.title }
                     div #{ note.author }
                 p(onload="realtime")
