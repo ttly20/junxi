@@ -93,7 +93,6 @@ module.exports = app => {
     router.get("/:title", async (req, res) => {
         const note = await Note.findOne({ title: req.params.title })
                     .populate("directory").populate("tags").exec()
-        console.log(note)
         note.content = marked(note.content)
         const lists = await Directory.find().populate("notes").exec()
         const tags = await Tag.find().populate("notes").exec()
@@ -119,9 +118,18 @@ module.exports = app => {
     })
 
     // note delete
-    router.delete("/note", async (req, res) => {
-        await Note.deleteOne({ _id: req.body._id })
+    router.delete("/note/:title", async (req, res) => {
+        const a = await Note.deleteOne({ title: req.params.title }, function (err) {
+            if (err) return err
+        })
         res.send("Delete Success.")
+    })
+
+    router.get("/tag/:tag", async (req, res) => {
+        const note =  await Tag.find({ tag:tag }).exec()
+        const lists = await Directory.find().populate("notes").exec()
+        const tags = await Tag.find().populate("notes").exec()
+        res.render("index", note, tags, lists)
     })
 
     app.use("/", router)

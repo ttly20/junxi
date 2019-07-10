@@ -4,6 +4,7 @@ new Vue({
         return {
             isCollapsed: false,
             buttonSize: "small",
+            tagselect: [],
             model: { tags: [] },
         };
     },
@@ -25,7 +26,6 @@ new Vue({
                 this.model.directory = directory.innerText
                 this.model.title = title.innerText
                 const noteget = await axios.get("/note/" + this.model.title)
-                console.log(noteget)
                 if (noteget.data == "" ) {
                     const res = await axios.post("/note", this.model)
                     this.$Message.success({
@@ -61,6 +61,16 @@ new Vue({
             const i = this.model.tags.indexOf(tag)
             this.model.tags.splice(i, 1)
             this.$Message.success("删除标签成功")
+        },
+        async tagselect (checked, name) {
+            alert(checked)
+        },
+        async delnote () {
+            const res = await axios.delete("/note/" + title.innerText)
+            this.$Message.success({
+                content: res.data,
+                duration: 5
+            })
         },
         regex (str) {
             const regx = /[\~\!\@\#\$\%\^\&\*\(\)\_\+\{\}\|\:\"\>\?\`\-\=\[\]\\;'\.\/～！·￥……（）——《》？、]/

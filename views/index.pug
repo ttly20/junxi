@@ -3,6 +3,8 @@ block content
     div(class="myleft")
         Breadcrumb(separator=">")
             breadcrumb-item(to="/") 首页
+        div(id="tagsview")
+            Tag(v-for="tag in tagselect") {{ tag }}
         each note in notes
             Card(class="mycont")
                 div(slot="title" class="contensingle") 标题: 
