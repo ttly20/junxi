@@ -23,5 +23,6 @@ Sider(breakpoint="md" scoped collapsible :collapsed-width="0"
                                             div(class="siderTitle") #{ note.title }
                     tab-pane(label="标签" name="tag")
                         each tag in tags
-                            Tag #{ tag.tag }
+                            a(href="/tag/" + tag.tag)
+                                Tag #{ tag.tag }
     div(slot="trigger")

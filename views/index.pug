@@ -5,9 +5,13 @@ block content
             breadcrumb-item(to="/") 首页
         each note in notes
             Card(class="mycont")
-                div(slot="title" class="contensingle")
+                div(slot="title" class="contensingle") 标题: 
                     a(href="/" + note.title) #{ note.title }
-                    div 作者: #{ note.author }
+                    - var author = note.author
+                    if author
+                        div 作者: #{ note.author }
+                    else 
+                        div 作者: 未知
                 != note.content
                 div(id="tagsview" class="contensingle") 标签:
                     each tag in note.tags
