@@ -19,7 +19,7 @@ module.exports = app => {
                 items.push(nohave[0]._id)
             } else {
                 const dohave = res.notes
-                dohave.push(ObjectId(model))
+                if (dohave.indexOf(ObjectId(model)) == -1) dohave.push(ObjectId(model))
                 await Tag.updateMany({ _id: res._id },
                     { notes: dohave }, { upsert: true })
                 items.push(res._id)
@@ -38,7 +38,7 @@ module.exports = app => {
             return nohave[0]._id
         } else {
             const dohave = res.notes
-            dohave.push(ObjectId(model))
+            if (dohave.indexOf(ObjectId(model)) == -1) dohave.push(ObjectId(model))
             await Directory.updateMany({ _id: res._id },
                 { notes: dohave }, { upsert: true })
             return res._id
@@ -75,23 +75,18 @@ module.exports = app => {
 
     // note save
     router.post("/note", async (req, res) => {
-        const dohave = await Note.find({ title: req.body.title }).exec()
-        if (dohave.length != 0) {
-            res.send("The article already exists!")
-        } else {
-            const model = new Note({
-                _id: new ObjectId,
-                title: req.body.title,
-                author: req.body.author,
-                content: req.body.content,
-            })
-            model.directory = await dir(model._id, req.body.directory)
-            model.tags = await tags(model._id, req.body.tags)
-            model.save(function (err) {
-                if (err) return err
-            })
-            res.send("success")
-        }
+        const model = new Note({
+            _id: new ObjectId,
+            title: req.body.title,
+            author: req.body.author,
+            content: req.body.content,
+        })
+        model.directory = await dir(model._id, req.body.directory)
+        model.tags = await tags(model._id, req.body.tags)
+        model.save(function (err) {
+            if (err) return err
+        })
+        res.send("Auto Save Success.")
     })
 
     // note descrption
@@ -119,13 +114,13 @@ module.exports = app => {
             directory: await dir(req.body._id, req.body.directory),
             tags: await tags(req.body._id, req.body.tags),
         }, { upsert: true })
-        res.send("note update")
+        res.send("Update Success.")
     })
 
     // note delete
     router.delete("/note", async (req, res) => {
         await Note.deleteOne({ _id: req.body._id })
-        res.send("note delete")
+        res.send("Delete Success.")
     })
 
     app.use("/", router)
