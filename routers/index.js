@@ -93,6 +93,7 @@ module.exports = app => {
     router.get("/:title", async (req, res) => {
         const note = await Note.findOne({ title: req.params.title })
                     .populate("directory").populate("tags").exec()
+        console.log(note)
         note.content = marked(note.content)
         const lists = await Directory.find().populate("notes").exec()
         const tags = await Tag.find().populate("notes").exec()

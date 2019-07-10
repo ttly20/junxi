@@ -12,16 +12,16 @@ Sider(breakpoint="md" scoped collapsible :collapsed-width="0"
         menu-item(name="1-3")
             i-input(search clearable)
         menu-item(name="1-4")
-            span
-                i-button(type="text" :size="buttonSize") 目录
-            span
-                i-button(type="text" :size="buttonSize") 标签
-        each list, index in lists
-            Submenu(name=index) 
-                div(slot="title") #{ list.directory }
-                each note in list.notes
-                    menu-item
-                        a(href= "/" + note.title)
-                            div(class="siderTitle") #{ note.title }
-                            //- i-button(type="text" :size="buttonSize") 删除
+                Tabs(type="card")
+                    tab-pane(label="目录" name="directory")
+                        each list, index in lists
+                            Submenu(name=index) 
+                                div(slot="title") #{ list.directory }
+                                each note in list.notes
+                                    menu-item
+                                        a(href= "/" + note.title)
+                                            div(class="siderTitle") #{ note.title }
+                    tab-pane(label="标签" name="tag")
+                        each tag in tags
+                            Tag #{ tag.tag }
     div(slot="trigger")
