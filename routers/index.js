@@ -119,10 +119,30 @@ module.exports = app => {
 
     // note delete
     router.delete("/note/:title", async (req, res) => {
-        const a = await Note.deleteOne({ title: req.params.title }, function (err) {
-            if (err) return err
-        })
-        res.send("Delete Success.")
+        const note = await Note.findOne({ title: req.params.title }).exec()
+        if (note != undefined) {
+            const note = await Note.find({ title: req.params.title }).exec()
+            await Note.deleteOne({ title: req.params.title }, function (err) {
+                if (err) return err
+            })
+            const tags = await Tag.where("notes").in(note[0]._id)
+            for (index in tags) {
+                const have = tags[index].notes.indexOf(note[0]._id)
+                tags[index].notes.splice(have, 1)
+                if (tags[index].notes.length == 0) await Tag.deleteOne({ _id: tags[index]._id })
+                else await Tag.updateMany({ _id: tags[index]._id }, tags[index])
+            }
+            const dir = await Directory.where("notes").in(note[0]._id)
+            for (index in dir) {
+                const have = dir[index].notes.indexOf(note[0]._id)
+                dir[index].notes.splice(have, 1)
+                if (dir[index].notes.length == 0) await Directory.deleteOne({ _id: dir[index] })
+                else await Directory.updateMany({ _id: dir[index]._id }, dir[index])
+            }
+            res.send("Note delete success.")
+        } else {
+            res.send("Note does not exist.")
+        }
     })
 
     router.get("/tag/:tag", async (req, res) => {

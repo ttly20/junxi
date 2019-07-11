@@ -71,6 +71,7 @@ new Vue({
                 content: res.data,
                 duration: 5
             })
+            window.replace("/")
         },
         regex (str) {
             const regx = /[\~\!\@\#\$\%\^\&\*\(\)\_\+\{\}\|\:\"\>\?\`\-\=\[\]\\;'\.\/～！·￥……（）——《》？、]/
