@@ -122,9 +122,7 @@ module.exports = app => {
         const note = await Note.findOne({ title: req.params.title }).exec()
         if (note != undefined) {
             const note = await Note.find({ title: req.params.title }).exec()
-            await Note.deleteOne({ title: req.params.title }, function (err) {
-                if (err) return err
-            })
+            await Note.deleteOne({ title: req.params.title })
             const tags = await Tag.where("notes").in(note[0]._id)
             for (index in tags) {
                 const have = tags[index].notes.indexOf(note[0]._id)
