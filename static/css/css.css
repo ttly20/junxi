@@ -108,6 +108,9 @@ a:visited {
 .mycont {
     margin-bottom: 10px;
 }
+.mycont > div > div > div > a > i {
+    margin-left: 10px;
+}
 .mytag {
     margin-left: 5px;
 }

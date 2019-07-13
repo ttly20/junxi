@@ -62,9 +62,11 @@ module.exports = app => {
 
     // note edit
     router.get("/edit/:title", async (req, res) => {
+        const note = await Note.find({ title: req.params.title }).populate("tags")
+            .populate("directory").exec()
         const lists = await Directory.find().populate("notes").exec()
         const tags = await Tag.find().populate("notes").exec()
-        res.render("edit", { title: req.params.title, lists, tags })
+        res.render("edit", { title: req.params.title, note: note[0], lists, tags })
     })
 
     router.get("/edit", async (req, res) => {
@@ -93,7 +95,7 @@ module.exports = app => {
     router.get("/:title", async (req, res) => {
         const note = await Note.findOne({ title: req.params.title })
                     .populate("directory").populate("tags").exec()
-        note.content = marked(note.content)
+        if (note.content != null) note.content = marked(note.content)
         const lists = await Directory.find().populate("notes").exec()
         const tags = await Tag.find().populate("notes").exec()
         res.render("content", { title: req.params.title, note, lists, tags })

@@ -1,4 +1,4 @@
-new Vue({
+const vm =new Vue({
     el: "#app",
     data () {
         return {
@@ -6,6 +6,7 @@ new Vue({
             buttonSize: "small",
             tagselect: [],
             model: { tags: [] },
+            number: 0,
         };
     },
     computed: {
@@ -45,6 +46,25 @@ new Vue({
                 this.$Message.warning("目录名或者标题不能为空")
             }
         },
+       async delnote () {
+            const res = await axios.delete("/note/" + title.innerText)
+            this.$Message.success({
+                content: res.data,
+                duration: 5
+            })
+            window.location.href = "/"
+        },
+        downtag (tag) {
+            this.model.tags.push(tag)
+        },
+        deltag (tag) {
+            const i = this.model.tags.indexOf(tag)
+            this.model.tags.splice(i, 1)
+            this.$Message.success("删除标签成功")
+        },
+        async tagselect (checked, name) {
+            alert(checked)
+        },
         addtag () {
             const tag = addtag.innerText.slice(0, -1)
             if (this.regex(addtag.innerText)) {
@@ -56,22 +76,6 @@ new Vue({
                 this.model.tags.push(tag)
             }
             addtag.innerText= ""
-        },
-        deltag (tag) {
-            const i = this.model.tags.indexOf(tag)
-            this.model.tags.splice(i, 1)
-            this.$Message.success("删除标签成功")
-        },
-        async tagselect (checked, name) {
-            alert(checked)
-        },
-        async delnote () {
-            const res = await axios.delete("/note/" + title.innerText)
-            this.$Message.success({
-                content: res.data,
-                duration: 5
-            })
-            window.location.href = "/"
         },
         regex (str) {
             const regx = /[\~\!\@\#\$\%\^\&\*\(\)\_\+\{\}\|\:\"\>\?\`\-\=\[\]\\;'\.\/～！·￥……（）——《》？、]/
