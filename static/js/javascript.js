@@ -7,6 +7,7 @@ const vm =new Vue({
             notes: [],
             model: { tags: [] },
             tags: [],
+            notesearch: "",
         }
     },
     computed: {
@@ -96,6 +97,15 @@ const vm =new Vue({
                 this.tags.splice(i, 1)
             }
             axios.post("/tag", this.tags)
+        },
+        async noteSearch () {
+            if (this.notesearch != "") {
+                 this.notes.data.notes = await axios.get("/search/" + this.notesearch)
+                    .then((response) => {
+                    return response.data
+                })
+                this.notesearch = ""
+            } else this.notesearch = ""
         },
         regex (str) {
             const regx = /[\~\!\@\#\$\%\^\&\*\(\)\_\+\{\}\|\:\"\>\?\`\-\=\[\]\\;'\.\/～！·￥……（）——《》？、]/

@@ -177,5 +177,16 @@ module.exports = app => {
         }
     })
 
+    // search
+    router.get("/search/:params", async (req, res) => {
+        let notes = await Note.find({ title: req.params.params })
+            .populate("directory").populate("tags").exec()
+        if (notes == null) {
+            notes = await Note.find({ author: req.params.params })
+                .populate("directory").populate("tags").exec()
+        }
+        res.send(notes)
+    })
+
     app.use("/", router)
 }
