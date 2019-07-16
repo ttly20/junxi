@@ -4,18 +4,14 @@ block content
         Breadcrumb(separator=">")
             breadcrumb-item(to="/") 首页
         div(id="tagsview")
-            Tag(v-for="tag in tagselect") {{ tag }}
-        each note in notes
+            Tag(v-for="tag in model.tags") {{ tag }}
+        div(v-for="note in notes.data.notes")
             Card(class="mycont")
                 div(slot="title" class="contensingle") 标题: 
-                    a(href="/" + note.title) #{ note.title }
-                    - var author = note.author
-                    if author
-                        div 作者: #{ note.author }
-                    else 
-                        div 作者: 未知
-                != note.content
-                div(id="tagsview" class="contensingle") 标签:
-                    each tag in note.tags
-                        Tag #{ tag.tag }
-                    div 发布日期: #{ note.date }
+                    a(:href="'/note/' + note.title") {{ note.title }}
+                    div(v-if="note.author") 作者: {{ note.author }}
+                    div(v-else) 作者: 未知
+                div(v-html="note.content")
+                div(id="tagsview" class="contensingle") 标签: 
+                    Tag(v-for="tag in note.tags") {{ tag.tag }}
+                    div 发布日期: {{ note.date }}

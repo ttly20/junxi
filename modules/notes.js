@@ -5,7 +5,7 @@ const notesSchema = new mongoose.Schema({
     title: { type: String, unique: true },
     author: { type: String },
     content: { type: String },
-    date: { type: Date, default: Date.now },
+    date: { type: Date, default: Date.now},
     tags: [{ type: mongoose.Schema.Types.ObjectId, ref: "tags" }],
     directory: { type: mongoose.Schema.Types.ObjectId, ref: "dirs" }
 })

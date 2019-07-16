@@ -45,19 +45,9 @@ module.exports = app => {
         }
     }
 
-    // index / note list
-    router.get("/", async (req, res) => {
-        const notes = await Note.find().populate("tags")
-            .populate("directory").exec()
-        for (index in notes) {
-            if (notes[index].content != undefined) {
-                notes[index].content = marked(notes[index]
-                    .content.substring(0, 100))
-            }
-        }
-        const lists = await Directory.find().populate("notes").exec()
-        const tags = await Tag.find().populate("notes").exec()
-        res.render("index", { title: "首页", notes, lists, tags })
+    // index
+    router.get("/", (req, res) => {
+        res.render("index")
     })
 
     // note edit
@@ -69,10 +59,80 @@ module.exports = app => {
         res.render("edit", { title: req.params.title, note: note[0], lists, tags })
     })
 
+    // note list
+    router.get("/note", async (req, res) => {
+        const notes = await Note.find().populate("directory").populate("tags").exec()
+        if (notes != null) {
+            for (index in notes) {
+                if (notes[index].content != null) {
+                    notes[index].content = marked(notes[index].content.substring(0, 100))
+                }
+                notes[index].date = notes[index].date.toString()
+            }
+        }
+        const lists = await Directory.find().populate("notes").exec()
+        const tags = await Tag.find().populate("notes").exec()
+        res.send({ notes, lists, tags })
+    })
+
+    // note create
     router.get("/edit", async (req, res) => {
         const lists = await Directory.find().populate("notes").exec()
         const tags = await Tag.find().populate("notes").exec()
         res.render("edit", { title: "新建笔记", lists, tags })
+    })
+
+   // note descrption
+    router.get("/note/:title", async (req, res) => {
+        const note = await Note.findOne({ title: req.params.title })
+                    .populate("directory").populate("tags").exec()
+        if (note != null) {
+            if (note.content != null) note.content = marked(note.content)
+            note.date = new Date(note.date)
+        }
+        const lists = await Directory.find().populate("notes").exec()
+        const tags = await Tag.find().populate("notes").exec()
+        res.render("content", { title: req.params.title, note, lists, tags })
+    })
+
+    // note query
+    router.get("/:title", async (req, res) => {
+        const note = await Note.findOne({ title: req.params.title }).populate("tags").populate("directory").exec()
+        res.send(note)
+    })
+
+    // note query of tag
+    router.post("/tag", async (req, res) => {
+        const notelist = []
+        for (index in req.body) {
+            const temp = await Tag.findOne({ tag: req.body[index] }).exec()
+            for (index in temp.notes) {
+                if (temp.notes[index].length != [].length) {
+                    if (notelist.indexOf(temp.notes[index]) == -1) notelist.push(temp.notes[index])
+                }
+            }
+        }
+        const notes = []
+        for (index in notelist) {
+            console.log(notelist[index])
+            notes.push(await Note.findById(notelist[index]).populate("tags")
+                .populate("directory").exec())
+        }
+        const lists = await Directory.find().populate("notes").exec()
+        const tags = await Tag.find().populate("notes").exec()
+        res.send({ notes, lists, tags })
+    })
+
+    // note update
+    router.put("/note", async (req, res) => {
+        await Note.updateMany({ _id: req.body._id }, {
+            title: req.body.title,
+            author: req.body.author,
+            content: req.body.content,
+            directory: await dir(req.body._id, req.body.directory),
+            tags: await tags(req.body._id, req.body.tags),
+        }, { upsert: true })
+        res.send("Update Success.")
     })
 
     // note save
@@ -90,35 +150,7 @@ module.exports = app => {
         })
         res.send("Auto Save Success.")
     })
-
-    // note descrption
-    router.get("/:title", async (req, res) => {
-        const note = await Note.findOne({ title: req.params.title })
-                    .populate("directory").populate("tags").exec()
-        if (note.content != null) note.content = marked(note.content)
-        const lists = await Directory.find().populate("notes").exec()
-        const tags = await Tag.find().populate("notes").exec()
-        res.render("content", { title: req.params.title, note, lists, tags })
-    })
-
-    // note query
-    router.get("/note/:title", async (req, res) => {
-        const note = await Note.findOne({ title: req.params.title }).exec()
-        res.send(note)
-    })
-
-    // note update
-    router.put("/note", async (req, res) => {
-        await Note.updateMany({ _id: req.body._id }, {
-            title: req.body.title,
-            author: req.body.author,
-            content: req.body.content,
-            directory: await dir(req.body._id, req.body.directory),
-            tags: await tags(req.body._id, req.body.tags),
-        }, { upsert: true })
-        res.send("Update Success.")
-    })
-
+ 
     // note delete
     router.delete("/note/:title", async (req, res) => {
         const note = await Note.findOne({ title: req.params.title }).exec()
@@ -143,13 +175,6 @@ module.exports = app => {
         } else {
             res.send("Note does not exist.")
         }
-    })
-
-    router.get("/tag/:tag", async (req, res) => {
-        const note =  await Tag.find({ tag:tag }).exec()
-        const lists = await Directory.find().populate("notes").exec()
-        const tags = await Tag.find().populate("notes").exec()
-        res.render("index", note, tags, lists)
     })
 
     app.use("/", router)

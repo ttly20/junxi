@@ -4,10 +4,10 @@ const vm =new Vue({
         return {
             isCollapsed: false,
             buttonSize: "small",
-            tagselect: [],
+            notes: [],
             model: { tags: [] },
-            number: 0,
-        };
+            tags: [],
+        }
     },
     computed: {
         menuitemClasses () {
@@ -16,6 +16,9 @@ const vm =new Vue({
                 this.isCollapsed ? 'collapsed-menu' : ''
             ]
         }
+    },
+    async created () {
+        this.notes = await axios.get("/note")
     },
     methods: {
         conversion () {
@@ -26,7 +29,7 @@ const vm =new Vue({
             if (directory.innerText != "" && title.innerText !="") {
                 this.model.directory = directory.innerText
                 this.model.title = title.innerText
-                const noteget = await axios.get("/note/" + this.model.title)
+                const noteget = await axios.get("/" + this.model.title)
                 if (noteget.data == "" ) {
                     const res = await axios.post("/note", this.model)
                     this.$Message.success({
@@ -54,8 +57,13 @@ const vm =new Vue({
             })
             window.location.href = "/"
         },
-        downtag (tag) {
-            this.model.tags.push(tag)
+        async downtag (checked, tag) {
+            const index = this.model.tags.indexOf(tag)
+            if (index == -1) this.model.tags.push(tag)
+            else this.model.tags.splice(index, 1)
+            if (this.model.tags.length != 0) {
+                this.notes = await axios.post("/tag", this.model.tags)
+            } else this.notes = await axios.get("/note")
         },
         deltag (tag) {
             const i = this.model.tags.indexOf(tag)
@@ -73,9 +81,21 @@ const vm =new Vue({
                 return
             }
             if (tag != "") {
-                this.model.tags.push(tag)
+                if (this.model.tags.indexOf(tag) == -1) {
+                    this.model.tags.push(tag)
+                }
             }
             addtag.innerText= ""
+        },
+        choosetag (checked, item) {
+            console.log(item)
+            tag = JSON.parse(item).item.tag
+            if (checked) this.tags.push(tag)
+            else {
+                const i = this.tags.indexOf(tag)
+                this.tags.splice(i, 1)
+            }
+            axios.post("/tag", this.tags)
         },
         regex (str) {
             const regx = /[\~\!\@\#\$\%\^\&\*\(\)\_\+\{\}\|\:\"\>\?\`\-\=\[\]\\;'\.\/～！·￥……（）——《》？、]/
