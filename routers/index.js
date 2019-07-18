@@ -9,6 +9,7 @@ module.exports = app => {
     const User = require("../modules/user")
     const jwt = require("jsonwebtoken")
     const assert = require("http-assert")
+    const bcrypt = require("bcrypt")
 
     // Permission Validation
     const isLogin = async (req, res, next) => {
@@ -214,7 +215,7 @@ module.exports = app => {
         if (!user) {
             res.status(401).send("User or Password is faild!")
         }
-        const isValid = require("bcrypt").compareSync(password, user.password)
+        const isValid = bcrypt.compareSync(password, user.password)
         if (!isValid) {
             res.status(401).send("User or Password is faild!")
         }
