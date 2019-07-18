@@ -11,6 +11,8 @@ const vm =new Vue({
             user: {},
             islogin: false,
             http: axios.create(),
+            lists: [],
+            tags: [],
         }
     },
     computed: {
@@ -33,7 +35,10 @@ const vm =new Vue({
             // Do something with request error
             return Promise.reject(error)
         })
-        this.notes = await this.http.get("/note")
+        const res = await this.http.get("note")
+        this.notes = res.data.notes
+        this.lists = res.data.lists
+        this.tags = res.tags
     },
     methods: {
         conversion () {

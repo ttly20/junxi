@@ -7,7 +7,7 @@ Sider(breakpoint="md" scoped collapsible :collapsed-width="0"
         menu-item(name="1-2" class="textalign")
             div(v-if="islogin")
                 span
-                    i-button(type="text" :size="buttonSize" to="/edit") 写文章
+                    i-button(type="text" :size="buttonSize" to="/edit") 写笔记
                 span
                     i-button(type="text" :size="buttonSize" @click="logout") 退  出
             div(v-else)
@@ -17,11 +17,11 @@ Sider(breakpoint="md" scoped collapsible :collapsed-width="0"
         menu-item(name="1-4")
             Tabs(value="directory")
                 tab-pane(label="目录" name="directory")
-                    Submenu(v-for="list, index in notes.data.lists" :name="index")
+                    Submenu(v-for="list, index in lists" :name="index")
                         div(slot="title") {{ list.directory }}
                         menu-item(v-for="note in list.notes")
                             a(:href="'/note/' + note.title")
                                 div(class="siderTitle") {{ note.title }}
                 tab-pane(label="标签" name="tags")
-                    Tag(checkable color="success" :checked="false" v-for="tag in notes.data.tags" @on-change="downtag" :name="tag.tag") {{ tag.tag }}
+                    Tag(checkable color="success" :checked="false" v-for="tag in tags" @on-change="downtag" :name="tag.tag") {{ tag.tag }}
     div(slot="trigger")
