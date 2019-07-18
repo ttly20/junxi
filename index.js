@@ -2,6 +2,8 @@
 const express = require("express")
 const app = express()
 
+app.set("sercret", "asdsasdf")
+
 // static folder
 app.use(express.static(__dirname + "/static"))
 
@@ -30,6 +32,13 @@ app.use(function (req, res, next) {
 app.use(function (err, req, res, next) {
   console.error(err.stack)
   res.status(500).send('Something broke!')
+})
+
+// error function
+app.use(async (err, req, res, next) => {
+  res.status(err.statusCode).send({
+    message: err.message
+  })
 })
 
 // listen 3000

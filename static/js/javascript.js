@@ -8,6 +8,9 @@ const vm =new Vue({
             model: { tags: [] },
             tags: [],
             notesearch: "",
+            user: {},
+            islogin: false,
+            http: axios.create(),
         }
     },
     computed: {
@@ -19,7 +22,18 @@ const vm =new Vue({
         }
     },
     async created () {
-        this.notes = await axios.get("/note")
+        if (localStorage.token) this.islogin = true
+        this.http.interceptors.request.use(function (config) {
+            // Do something before request is sent
+            if (localStorage.token) {
+                config.headers.Authorization = 'Bearer ' + (localStorage.token || "")
+            }
+            return config
+        }, function (error) {
+            // Do something with request error
+            return Promise.reject(error)
+        })
+        this.notes = await this.http.get("/note")
     },
     methods: {
         conversion () {
@@ -30,16 +44,16 @@ const vm =new Vue({
             if (directory.innerText != "" && title.innerText !="") {
                 this.model.directory = directory.innerText
                 this.model.title = title.innerText
-                const noteget = await axios.get("/" + this.model.title)
+                const noteget = await this.http.get("/dohave/" + this.model.title)
                 if (noteget.data == "" ) {
-                    const res = await axios.post("/note", this.model)
+                    const res = await this.http.post("/note", this.model)
                     this.$Message.success({
                         content: res.data,
                         duration: 5
                     })
                 } else {
                     this.model._id = noteget.data._id
-                    const res = await axios.put("/note", this.model)
+                    const res = await this.http.put("/note", this.model)
                     this.$Message.success({
                         content: res.data,
                         duration: 5
@@ -50,8 +64,8 @@ const vm =new Vue({
                 this.$Message.warning("目录名或者标题不能为空")
             }
         },
-       async delnote () {
-            const res = await axios.delete("/note/" + title.innerText)
+        async delnote () {
+            const res = await this.http.delete("/note/" + title.innerText)
             this.$Message.success({
                 content: res.data,
                 duration: 5
@@ -63,16 +77,13 @@ const vm =new Vue({
             if (index == -1) this.model.tags.push(tag)
             else this.model.tags.splice(index, 1)
             if (this.model.tags.length != 0) {
-                this.notes = await axios.post("/tag", this.model.tags)
-            } else this.notes = await axios.get("/note")
+                this.notes = await this.http.post("/tag", this.model.tags)
+            } else this.notes = await this.http.get("/note")
         },
         deltag (tag) {
             const i = this.model.tags.indexOf(tag)
             this.model.tags.splice(i, 1)
             this.$Message.success("删除标签成功")
-        },
-        async tagselect (checked, name) {
-            alert(checked)
         },
         addtag () {
             const tag = addtag.innerText.slice(0, -1)
@@ -100,12 +111,24 @@ const vm =new Vue({
         },
         async noteSearch () {
             if (this.notesearch != "") {
-                 this.notes.data.notes = await axios.get("/search/" + this.notesearch)
+                 this.notes.data.notes = await this.http.get("/search/" + this.notesearch)
                     .then((response) => {
                     return response.data
                 })
                 this.notesearch = ""
             } else this.notesearch = ""
+        },
+        async login () {
+            if (this.user) {
+                const res = await this.http.post("/login", this.user)
+                localStorage.token = res.data.token
+                this.model.author = res.data.author
+                window.location.href = "/"
+            }
+        },
+        logout () {
+            localStorage.token = ""
+            window.location.href = "/"
         },
         regex (str) {
             const regx = /[\~\!\@\#\$\%\^\&\*\(\)\_\+\{\}\|\:\"\>\?\`\-\=\[\]\\;'\.\/～！·￥……（）——《》？、]/

@@ -10,11 +10,11 @@ block content
         Card(class="mycont")
             div(slot="title" class="contensingle") 标题: #{ note.title }
                 div 作者: #{ note.author }
-                    a(href="/edit/" + note.title)
-                        Icon(type="md-create")
-                    //- Icon(type="md-create" @click="editnote")
-                    span
-                        Icon(type="md-close" @click="delnote")
+                    div(v-if="islogin")
+                        a(href="/edit/" + note.title)
+                            Icon(type="md-create")
+                        span
+                            Icon(type="md-close" @click="delnote")
             != note.content
             div(id="tagsview" class="contensingle") 标签:
                 each tag in note.tags

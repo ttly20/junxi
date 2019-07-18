@@ -114,3 +114,6 @@ a:visited {
 .mytag {
     margin-left: 5px;
 }
+.textalign {
+    text-align: center;
+}

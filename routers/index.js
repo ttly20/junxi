@@ -6,6 +6,20 @@ module.exports = app => {
     const Tag = require("../modules/notes").tags
     const Directory = require("../modules/notes").dirs
     const ObjectId = require("mongoose").Types.ObjectId
+    const User = require("../modules/user")
+    const jwt = require("jsonwebtoken")
+    const assert = require("http-assert")
+
+    // Permission Validation
+    const isLogin = async (req, res, next) => {
+        const token = String(req.headers.authorization || '').split(' ').pop()
+        assert(token, 422, "Please login!")
+        const {id} = jwt.verify(token, app.get("sercret"))
+        assert(id, 422, "Please login!")
+        req.user = await User.findById(id)
+        assert(req.user, 422, "Please login!")
+        await next()
+    }
 
     // tag manage
     async function tags (model, tags) {
@@ -96,7 +110,7 @@ module.exports = app => {
     })
 
     // note query
-    router.get("/:title", async (req, res) => {
+    router.get("/dohave/:title", async (req, res) => {
         const note = await Note.findOne({ title: req.params.title }).populate("tags").populate("directory").exec()
         res.send(note)
     })
@@ -114,7 +128,6 @@ module.exports = app => {
         }
         const notes = []
         for (index in notelist) {
-            console.log(notelist[index])
             notes.push(await Note.findById(notelist[index]).populate("tags")
                 .populate("directory").exec())
         }
@@ -124,7 +137,7 @@ module.exports = app => {
     })
 
     // note update
-    router.put("/note", async (req, res) => {
+    router.put("/note", isLogin, async (req, res) => {
         await Note.updateMany({ _id: req.body._id }, {
             title: req.body.title,
             author: req.body.author,
@@ -136,13 +149,14 @@ module.exports = app => {
     })
 
     // note save
-    router.post("/note", async (req, res) => {
+    router.post("/note", isLogin, async (req, res) => {
         const model = new Note({
             _id: new ObjectId,
             title: req.body.title,
             author: req.body.author,
             content: req.body.content,
         })
+        if (req.body.author) model.author = req.body.author
         model.directory = await dir(model._id, req.body.directory)
         model.tags = await tags(model._id, req.body.tags)
         model.save(function (err) {
@@ -152,7 +166,7 @@ module.exports = app => {
     })
  
     // note delete
-    router.delete("/note/:title", async (req, res) => {
+    router.delete("/note/:title",isLogin , async (req, res) => {
         const note = await Note.findOne({ title: req.params.title }).exec()
         if (note != undefined) {
             const note = await Note.find({ title: req.params.title }).exec()
@@ -186,6 +200,28 @@ module.exports = app => {
                 .populate("directory").populate("tags").exec()
         }
         res.send(notes)
+    })
+
+    // login
+    router.get("/login", (req, res) => {
+        res.render("login")
+    })
+
+    // login valid
+    router.post("/login/", async (req, res) => {
+        const { username, password } = req.body
+        const user = await User.findOne({ username }).exec()
+        if (!user) {
+            res.status(401).send("User or Password is faild!")
+        }
+        const isValid = require("bcrypt").compareSync(password, user.password)
+        if (!isValid) {
+            res.status(401).send("User or Password is faild!")
+        }
+        const token = jwt.sign({
+            id: user._id,
+        }, app.get("sercret"))
+        res.send({token, nickname: user.nickname})
     })
 
     app.use("/", router)

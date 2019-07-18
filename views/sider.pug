@@ -4,11 +4,14 @@ Sider(breakpoint="md" scoped collapsible :collapsed-width="0"
         menu-item(name="1-1")
             a(href="/")
                 img(src="/img/logo.png" alt="君兮")
-        menu-item(name="1-2")
-            span
-                i-button(type="text" :size="buttonSize" to="/edit") 写文章
-            span
-                i-button(type="text" :size="buttonSize" to="/") 退  出
+        menu-item(name="1-2" class="textalign")
+            div(v-if="islogin")
+                span
+                    i-button(type="text" :size="buttonSize" to="/edit") 写文章
+                span
+                    i-button(type="text" :size="buttonSize" @click="logout") 退  出
+            div(v-else)
+                i-button(type="text" :size="buttonSize" to="/login") 登陆
         menu-item(name="1-3")
             i-input(search clearable v-model="notesearch" @on-blur="noteSearch")
         menu-item(name="1-4")
