@@ -11,6 +11,7 @@ apps:
         pid_file           : "./logs/app-pm_id.pid"                                   # pid文件
         watch              : true                                                     # 监视项目文件改动
         max_memory_restart : 100M                                                     # 内存超标自动重启
+        ignore_watch       : ["node_modules", "logs", "client/img"]                   # 设置不监听的文件夹
 
 deploy                     :                                                          # 部署脚本
         production         :                                                          # 生产环境
