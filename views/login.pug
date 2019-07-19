@@ -1,11 +1,13 @@
 extends layout
 block content
-    Form(ref="formInline" :model="user" inline)
-        FormItem(prop="user")
-           I-input(type="text" v-model="user.username" placeholder="Username")
-               Icon(type="ios-person-outline" slot="prepend")
-        FormItem(prop="password")
-            I-input(type="password" v-model="user.password" placeholder="Password")
-               Icon(type="ios-lock-outline" slot="prepend")
-        FormItem
-            i-button(type="primary" @click="login") Signin
+    div(class="form")
+        i-form(ref="formInline" :model="user")
+            Form-Item(prop="user")
+               I-input(type="text" v-model="user.username" placeholder="Username")
+                   Icon(type="ios-person-outline" slot="prepend")
+            Form-Item(prop="password")
+                I-input(type="password" v-model="user.password" placeholder="Password")
+                   Icon(type="ios-lock-outline" slot="prepend")
+            Form-Item(class="mybutton")
+                i-button(type="primary" @click="login") 登陆
+                i-Button(style="margin-left: 8px" to="/") Cancel

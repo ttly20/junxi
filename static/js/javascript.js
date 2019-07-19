@@ -35,6 +35,19 @@ const vm =new Vue({
             // Do something with request error
             return Promise.reject(error)
         })
+        this.http.interceptors.response.use(res => {
+            // 对响应数据做点什么
+            return res
+        }, err => {
+            // 对响应错误做点什么
+            if (err.response.data.message) {
+                this.$Message.error({
+                    content: err.response.data.message,
+                    duration: 5
+                })
+            }
+            return Promise.reject(err)
+        })
         const res = await this.http.get("note")
         this.notes = res.data.notes
         this.lists = res.data.lists

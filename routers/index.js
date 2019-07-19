@@ -8,17 +8,23 @@ module.exports = app => {
     const ObjectId = require("mongoose").Types.ObjectId
     const User = require("../modules/user")
     const jwt = require("jsonwebtoken")
-    const assert = require("http-assert")
     const bcrypt = require("bcrypt")
 
     // Permission Validation
     const isLogin = async (req, res, next) => {
         const token = String(req.headers.authorization || '').split(' ').pop()
-        assert(token, 422, "Please login!")
-        const {id} = jwt.verify(token, app.get("sercret"))
-        assert(id, 422, "Please login!")
+        if (!token) {
+            return res.status(422).send({ message: "Please login!" })
+        }
+        console.log("令牌:" + token)
+        const { id } = jwt.verify(token, app.get("sercret"))
+        if (!id) {
+            return res.status(422).send({ message: "Please login!" })
+        }
         req.user = await User.findById(id)
-        assert(req.user, 422, "Please login!")
+        if (!req.user) {
+            return res.status(422).send({ message: "Please login!" })
+        }
         await next()
     }
 
@@ -213,11 +219,11 @@ module.exports = app => {
         const { username, password } = req.body
         const user = await User.findOne({ username }).exec()
         if (!user) {
-            res.status(401).send("User or Password is faild!")
+            return res.status(401).send({ message: "User or Password is faild" })
         }
         const isValid = bcrypt.compareSync(password, user.password)
         if (!isValid) {
-            res.status(401).send("User or Password is faild!")
+            return res.status(401).send({ message: "User or Password is faild" })
         }
         const token = jwt.sign({
             id: user._id,
