@@ -137,10 +137,15 @@ module.exports = app => {
         for (index in notelist) {
             notes.push(await Note.findById(notelist[index]).populate("tags")
                 .populate("directory").exec())
+            for (index in notes) {
+                if (notes[index].content != null) {
+                    notes[index].content = marked(notes[index].content.substring(0, 100))
+                }
+                notes[index].date = notes[index].date.toString()
+            }
+
         }
-        const lists = await Directory.find().populate("notes").exec()
-        const tags = await Tag.find().populate("notes").exec()
-        res.send({ notes, lists, tags })
+        res.send(notes)
     })
 
     // note update

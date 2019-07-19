@@ -37,7 +37,7 @@ const vm =new Vue({
         })
         this.http.interceptors.response.use(res => {
             // 对响应数据做点什么
-            return res
+            return res.data
         }, err => {
             // 对响应错误做点什么
             if (err.response.data.message) {
@@ -48,10 +48,10 @@ const vm =new Vue({
             }
             return Promise.reject(err)
         })
-        const res = await this.http.get("note")
-        this.notes = res.data.notes
-        this.lists = res.data.lists
-        this.tags = res.data.tags
+        const res = await this.http.get("/note")
+        this.notes = res.notes
+        this.lists = res.lists
+        this.tags = res.tags
     },
     methods: {
         conversion () {
@@ -95,8 +95,12 @@ const vm =new Vue({
             if (index == -1) this.model.tags.push(tag)
             else this.model.tags.splice(index, 1)
             if (this.model.tags.length != 0) {
-                this.notes = await this.http.post("/tag", this.model.tags)
-            } else this.notes = await this.http.get("/note")
+                let res = await this.http.post("/tag", this.model.tags)
+                this.notes = res
+            } else {
+                let res = await this.http.get("/note")
+                this.notes = res.notes
+            }
         },
         deltag (tag) {
             const i = this.model.tags.indexOf(tag)
