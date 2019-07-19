@@ -63,17 +63,17 @@ const vm =new Vue({
                 this.model.directory = directory.innerText
                 this.model.title = title.innerText
                 const noteget = await this.http.get("/dohave/" + this.model.title)
-                if (noteget.data == "" ) {
+                if (noteget == "" ) {
                     const res = await this.http.post("/note", this.model)
                     this.$Message.success({
-                        content: res.data,
+                        content: res,
                         duration: 5
                     })
                 } else {
-                    this.model._id = noteget.data._id
+                    this.model._id = noteget._id
                     const res = await this.http.put("/note", this.model)
                     this.$Message.success({
-                        content: res.data,
+                        content: res,
                         duration: 5
                     })
                 }
@@ -85,7 +85,7 @@ const vm =new Vue({
         async delnote () {
             const res = await this.http.delete("/note/" + title.innerText)
             this.$Message.success({
-                content: res.data,
+                content: res,
                 duration: 5
             })
             window.location.href = "/"
@@ -133,9 +133,9 @@ const vm =new Vue({
         },
         async noteSearch () {
             if (this.notesearch != "") {
-                 this.notes.data.notes = await this.http.get("/search/" + this.notesearch)
+                 this.notes.notes = await this.http.get("/search/" + this.notesearch)
                     .then((response) => {
-                    return response.data
+                    return response
                 })
                 this.notesearch = ""
             } else this.notesearch = ""
