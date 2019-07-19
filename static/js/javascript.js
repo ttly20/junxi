@@ -51,7 +51,7 @@ const vm =new Vue({
         const res = await this.http.get("note")
         this.notes = res.data.notes
         this.lists = res.data.lists
-        this.tags = res.tags
+        this.tags = res.data.tags
     },
     methods: {
         conversion () {
