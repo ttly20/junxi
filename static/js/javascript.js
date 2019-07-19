@@ -145,7 +145,7 @@ const vm =new Vue({
                 const res = await this.http.post("/login", this.user)
                 localStorage.token = res.token
                 this.model.nickname = res.data.nickname
-                // window.location.href = "/"
+                window.location.href = "/"
             }
         },
         logout () {
