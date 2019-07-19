@@ -24,7 +24,7 @@ require(__dirname + "/routers")(app)
 require(__dirname + "/plugins/db")(app, "mongodb://127.0.0.1:27017/ttly20")
 
 // set 404
-app.use(function (req, res, next) {
+app.use(function (err, req, res, next) {
   res.status(404).send("Sorry can't find that!")
 })
 

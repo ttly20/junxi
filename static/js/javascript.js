@@ -140,7 +140,8 @@ const vm =new Vue({
             if (this.user) {
                 const res = await this.http.post("/login", this.user)
                 localStorage.token = res.data.token
-                this.model.author = res.data.author
+                console.log(res.data)
+                this.model.nickname = res.data.nickname
                 window.location.href = "/"
             }
         },

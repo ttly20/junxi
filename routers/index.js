@@ -163,7 +163,7 @@ module.exports = app => {
             author: req.body.author,
             content: req.body.content,
         })
-        if (req.body.author) model.author = req.body.author
+        if (req.body.author) model.author = req.body.nickname
         model.directory = await dir(model._id, req.body.directory)
         model.tags = await tags(model._id, req.body.tags)
         model.save(function (err) {
