@@ -143,10 +143,9 @@ const vm =new Vue({
         async login () {
             if (this.user) {
                 const res = await this.http.post("/login", this.user)
-                localStorage.token = res.data.token
-                console.log(res.data)
+                localStorage.token = res.token
                 this.model.nickname = res.data.nickname
-                window.location.href = "/"
+                // window.location.href = "/"
             }
         },
         logout () {

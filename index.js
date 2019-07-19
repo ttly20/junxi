@@ -20,6 +20,9 @@ app.use(bodyParse.urlencoded({ extended: true }))
 app.use(require("cors")())
 require(__dirname + "/routers")(app)
 
+// restfull api routers
+require(__dirname + "/routers/video")(app)
+
 // database
 require(__dirname + "/plugins/db")(app, "mongodb://127.0.0.1:27017/ttly20")
 

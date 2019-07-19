@@ -16,7 +16,6 @@ module.exports = app => {
         if (!token) {
             return res.status(422).send({ message: "Please login!" })
         }
-        console.log("令牌:" + token)
         const { id } = jwt.verify(token, app.get("sercret"))
         if (!id) {
             return res.status(422).send({ message: "Please login!" })
