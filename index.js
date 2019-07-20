@@ -1,7 +1,13 @@
+// Exception handing
+const d = require("domain").create()
 // create App
 const express = require("express")
 const app = express()
 
+// Exception option
+
+
+// sercret key
 app.set("sercret", "asdsasdf")
 
 // static folder
