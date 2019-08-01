@@ -16,7 +16,7 @@ module.exports = app => {
     ROUTER.get("/list/:page",async (req, res) => {
         let list
         if (req.params.page == 1)
-            list = await VIDEOS.find().skip(req.params.page)
+            list = await VIDEOS.find()
                 .limit(10).sort({ update: -1 }).exec()
         else
             list = await  VIDEOS.find().skip(req.params.page - 1)
