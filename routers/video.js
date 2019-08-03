@@ -23,6 +23,7 @@ module.exports = app => {
         else
             list = await  VIDEOS.find().skip((req.params.page - 1) * 10)
                 .limit(10).sort({ update: -1 }).exec()
+        console.log(list[0])
         res.send(list)
     })
 

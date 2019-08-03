@@ -14,7 +14,7 @@ const VideoSchema = new mongoose.Schema({
     update: { type: String },
     plot: { type: String },
     plays: { type: mongoose.Schema.Types.Mixed  },
-    download: [{ type: mongoose.Schema.Types.Mixed }],
+    download: { type: mongoose.Schema.Types.Mixed },
 })
 
 module.exports = {
